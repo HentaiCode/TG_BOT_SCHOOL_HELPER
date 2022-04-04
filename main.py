@@ -1,9 +1,8 @@
 from flask import Flask, render_template, redirect, request, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
-from forms.news import NewsForm
+from forms.news import JobsForm
 from forms.user import RegisterForm, LoginForm
-from data.news import News
 from data.jobs import Jobs
 from data.addjob import AddJobForm
 from data.users import User
@@ -34,61 +33,61 @@ def main():
     app.run()
 
 
-@app.route('/news', methods=['GET', 'POST'])
+@app.route('/jobs', methods=['GET', 'POST'])
 @login_required
-def add_news():
-    form = NewsForm()
+def add_jobs():
+    form = JobsForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        news = News()
-        news.title = form.title.data
-        news.content = form.content.data
-        news.is_private = form.is_private.data
-        current_user.news.append(news)
+        jobs = Jobs()
+        jobs.title = form.title.data
+        jobs.content = form.content.data
+        jobs.is_private = form.is_private.data
+        current_user.jobs.append(jobs)
         db_sess.merge(current_user)
         db_sess.commit()
         return redirect('/')
-    return render_template('news.html', title='Добавление новости', form=form)
+    return render_template('jobs.html', title='Добавление новости', form=form)
 
 
-@app.route('/news_delete/<int:id>', methods=['GET', 'POST'])
+@app.route('/jobs_delete/<int:id>', methods=['GET', 'POST'])
 @login_required
-def news_delete(id):
+def jobs_delete(id):
     db_sess = db_session.create_session()
-    news = db_sess.query(News).filter(News.id == id, News.user == current_user).first()
-    if news:
-        db_sess.delete(news)
+    jobs = db_sess.query(Jobs).filter(Jobs.id == id, Jobs.user == current_user).first()
+    if jobs:
+        db_sess.delete(jobs)
         db_sess.commit()
     else:
         abort(404)
     return redirect('/')
 
 
-@app.route('/news/<int:id>', methods=['GET', 'POST'])
+@app.route('/jobs/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit_news(id):
-    form = NewsForm()
+def edit_jobs(id):
+    form = JobsForm()
     if request.method == "GET":
         db_sess = db_session.create_session()
-        news = db_sess.query(News).filter(News.id == id, News.user == current_user).first()
-        if news:
-            form.title.data = news.title
-            form.content.data = news.content
-            form.is_private.data = news.is_private
+        jobs = db_sess.query(Jobs).filter(Jobs.id == id, Jobs.user == current_user).first()
+        if jobs:
+            form.title.data = jobs.title
+            form.content.data = jobs.content
+            form.is_private.data = jobs.is_private
         else:
             abort(404)
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        news = db_sess.query(News).filter(News.id == id, News.user == current_user).first()
-        if news:
-            news.title = form.title.data
-            news.content = form.content.data
-            news.is_private = form.is_private.data
+        jobs = db_sess.query(Jobs).filter(Jobs.id == id, Jobs.user == current_user).first()
+        if jobs:
+            jobs.title = form.title.data
+            jobs.content = form.content.data
+            jobs.is_private = form.is_private.data
             db_sess.commit()
             return redirect('/')
         else:
             abort(404)
-    return render_template('news.html', title='Редактирование новости', form=form)
+    return render_template('jobs.html', title='Редактирование новости', form=form)
 
 
 @app.route("/")
