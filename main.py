@@ -1,13 +1,14 @@
 from flask import Flask, render_template, redirect, request, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash
 
+from data import db_session
+from data.addjob import AddJobForm
+from data.jobs import Jobs
+from data.reqparse_user import parser
+from data.users import User
 from forms.news import JobsForm
 from forms.user import RegisterForm, LoginForm
-from data.jobs import Jobs
-from data.addjob import AddJobForm
-from data.users import User
-from data import db_session
-from data.reqparse_user import parser
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -111,17 +112,18 @@ def register():
         if db_sess.query(User).filter(User.email == form.email.data).first():
             return render_template('register.html', title='Регистрация', form=form,
                                    message="Такой пользователь уже есть")
-        args = parser.parse_args()
-        print(args)
-        user = User()
-        user.name = args['name']
-        user.surname = args['surname']
-        user.age = args['age']
-        user.address = args['address']
-        user.email = args['email']
-        user.position = args['position']
-        user.speciality = args['speciality']
-        user.hashed_password = user.set_password(args['hashed_password'])
+        user = User(
+            name=form.name.data,
+            surname=form.surname.data,
+            age=form.surname.data,
+            address=form.surname.data,
+            email=form.surname.data,
+            position=form.surname.data,
+            speciality=form.surname.data,
+            hashed_password=generate_password_hash(form.password.data)
+        )
+        user.set_password(form.password.data)
+        print(user)
         db_sess.add(user)
         db_sess.commit()
         return redirect('/login')
@@ -135,31 +137,12 @@ def login():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         # print(user.hashed_password.decode('utf-8'), form.password.data)
-        if user and user.check_password(form.password):
+        if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect("/")
         return render_template('login.html', message="Неправильный логин или пароль", form=form)
     return render_template('login.html', title='Авторизация', form=form)
 
 
-@app.route('/addjob', methods=['GET', 'POST'])
-def addjob():
-    add_form = AddJobForm()
-    if add_form.validate_on_submit():
-        db_sess = db_session.create_session()
-        jobs = Jobs(
-            job=add_form.job.data,
-            team_leader=add_form.team_leader.data,
-            work_size=add_form.work_size.data,
-            collaborators=add_form.collaborators.data,
-            is_finished=add_form.is_finished.data
-        )
-        db_sess.add(jobs)
-        db_sess.commit()
-        return redirect('/')
-    return render_template('addjob.html', title='Adding a job', form=add_form)
-
-
 if __name__ == '__main__':
     main()
-    
