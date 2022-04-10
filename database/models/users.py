@@ -1,10 +1,12 @@
 import datetime
 import sqlalchemy
+from flask_login import UserMixin
+
 from werkzeug.security import generate_password_hash, check_password_hash
-from .db_session import SqlAlchemyBase
+from database.manage import SqlAlchemyBase
 
 
-class User(SqlAlchemyBase):
+class User(UserMixin, SqlAlchemyBase):
     __tablename__ = 'users'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
@@ -12,11 +14,11 @@ class User(SqlAlchemyBase):
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     age = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     position = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    speciality = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    address = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    address = sqlalchemy.Column(sqlalchemy.Text, nullable=True)
+    about = sqlalchemy.Column(sqlalchemy.Text, nullable=True)
     email = sqlalchemy.Column(sqlalchemy.String, index=True, unique=True, nullable=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    modifed_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
+    modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
 
     def __repr__(self):
         return f'<Colonist> {self.id} {self.surname} {self.name}'

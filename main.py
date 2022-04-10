@@ -3,10 +3,8 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from werkzeug.security import generate_password_hash
 
 from data import db_session
-from data.addjob import AddJobForm
-from data.jobs import Jobs
-from data.reqparse_user import parser
-from data.users import User
+from database.models.jobs import Jobs
+from database.models.users import User
 from forms.news import JobsForm
 from forms.user import RegisterForm, LoginForm
 
@@ -30,7 +28,9 @@ def logout():
 
 
 def main():
-    db_session.global_init("db/blogs.db")
+    print(1)
+    db_session.global_init("database/blogs.db")
+    print(2)
     app.run()
 
 
@@ -66,7 +66,7 @@ def jobs_delete(id):
 
 @app.route('/jobs/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit_jobs(id):
+def edit_jobs(job_id):
     form = JobsForm()
     if request.method == "GET":
         db_sess = db_session.create_session()
@@ -91,14 +91,7 @@ def edit_jobs(id):
     return render_template('jobs.html', title='Редактирование новости', form=form)
 
 
-@app.route("/")
-def index():
-    db_sess = db_session.create_session()
-    jobs = db_sess.query(Jobs).all()
-    users = db_sess.query(User).all()
-    names = {name.id: (name.surname, name.name) for name in users}
-    # print(names)
-    return render_template("index.html", jobs=jobs, names=names, title='Work Log')
+
 
 
 @app.route('/register', methods=['GET', 'POST'])
