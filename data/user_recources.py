@@ -3,7 +3,7 @@ from flask_restful import Resource, abort
 from werkzeug.security import generate_password_hash
 
 from data import db_session
-from .users import User
+from database.models.users import User
 from data.reqparse_user import parser
 
 
@@ -37,9 +37,11 @@ class UsersResource(Resource):
 
 
 class UsersListResource(Resource):
+    def __init__(self):
+        self.session = db_session.create_session()
+
     def get(self):
-        session = db_session.create_session()
-        users = session.query(User).all()
+        users = self.session.query(User).all()
         return jsonify({'users': [item.to_dict(only=('name', 'surname', 'age', 'address',
                                                      'email', 'position', 'speciality',
                                                      'hashed_password')) for item in users]})
