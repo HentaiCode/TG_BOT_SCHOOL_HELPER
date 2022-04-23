@@ -11,11 +11,12 @@ class Jobs(SqlAlchemyBase, UserMixin, SerializerMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     title = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    scope_of_work = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     content = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    director_name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    name_of_student = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    team_leader_name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    accomplices = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    work_size = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    is_finished = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
     is_private = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
-    users = orm.relationship('User', backref='Jobs')
-    author_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
 

@@ -1,10 +1,14 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from flask import current_app as app
 import os
+from dotenv import load_dotenv
 
-engine = create_engine('sqlite:///blogs.db')
+
+load_dotenv()
+DB_PATH = os.getenv('DB_PATH')
+
+engine = create_engine(f'sqlite:///{DB_PATH}')
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))

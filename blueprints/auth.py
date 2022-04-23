@@ -1,11 +1,8 @@
-from flask import Flask, render_template, redirect, request, abort, Blueprint, flash
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash
+from flask import render_template, redirect, Blueprint
+from flask_login import login_user, login_required, logout_user
 
-from database.models.jobs import Jobs
 from database.models.users import User
-from forms.news import JobsForm
-from database.manage import db_session
+
 from forms.user import RegisterForm, LoginForm
 from database.repositories import users_rep
 

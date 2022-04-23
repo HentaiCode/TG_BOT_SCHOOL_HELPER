@@ -1,47 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Adding a project</h1>
-    {{ form.hidden_tag() }}
-    {{ form.csrf_token }}
-    <p>
-        {{ form.job.label }}<br>
-        {{ form.job(class="form-control") }}<br>
-        {% for error in form.job.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>
-        {{ form.team_leader.label }}<br>
-        {{ form.team_leader(class="form-control") }}<br>
-        {% for error in form.team_leader.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>
-        {{ form.work_size.label }}<br>
-        {{ form.work_size(class="form-control") }}<br>
-        {% for error in form.work_size.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>
-        {{ form.collaborators.label }}<br>
-        {{ form.collaborators(class="form-control") }}<br>
-        {% for error in form.collaborators.errors %}
-    <p class="alert alert-danger" role="alert">
-        {{ error }}
-    </p>
-    {% endfor %}
-    </p>
-    <p>{{ form.is_finished() }} {{ form.is_finished.label }}</p>
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-    {{message}}
-</form>
+    <h1>Adding a job</h1>
+    <form action="" method="post">
+      {{ form.hidden_tag() }}
+      {{ form.csrf_token }}
+      {% for item in form if item.widget.input_type != 'hidden' %}
+        <p>
+          {{ item.label if item.widget.input_type != 'submit'}}<br>
+          {{ item(class="form-control", type=item.widget.input_type) }}<br>
+        </p>
+        {% for error in item.errors %}
+          <p class="alert alert-danger" role="alert">
+            {{ error }}
+          </p>
+        {% endfor %}
+      {% endfor %}
+      {{message}}
+    </form>
 {% endblock %}
