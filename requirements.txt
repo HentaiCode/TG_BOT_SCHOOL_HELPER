@@ -5,3 +5,4 @@ wtforms
 sqlalchemy_serializer
 flask_restful
 python-dotenv
+pyTelegramBotAPI
