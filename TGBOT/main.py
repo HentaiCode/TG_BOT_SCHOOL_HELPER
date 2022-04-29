@@ -1,8 +1,13 @@
 import telebot
 from database.models import Jobs
 from database.manage import db_session
+import os
+from dotenv import load_dotenv
 
-token = '5378504912:AAE_YqJw7F1AAjDq_QRcEGVzjUD9Z9fY06E'
+
+load_dotenv()
+
+token = os.getenv('token')
 bot = telebot.TeleBot(token)
 
 
