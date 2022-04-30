@@ -14,9 +14,6 @@ bot = telebot.TeleBot(token)
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    bot.send_message(message.chat.id, f"Привет, {message.from_user.first_name}! Я TGBOT-SchoolHelper,"
-                                      f" я предназначен для помощи тебе в школьных делах(напоминания, поиск "
-                                      f"работ, и так далее). Чтобы узнать подробны функции пиши /help")
     markup = types.ReplyKeyboardMarkup()
     button_help = types.KeyboardButton('/help')
     button_search_title = types.KeyboardButton('/search_job_title')
@@ -24,6 +21,11 @@ def start_message(message):
 
     markup.row(button_search_title, button_search_scope)
     markup.row(button_help)
+
+    bot.send_message(message.chat.id, f"Привет, {message.from_user.first_name}! Я TGBOT-SchoolHelper,"
+                                      f" я предназначен для помощи тебе в школьных делах(напоминания, поиск "
+                                      f"работ, и так далее). Чтобы узнать подробны функции пиши /help",
+                     reply_markup=markup)
 
 
 @bot.message_handler(commands=['help'])
@@ -45,7 +47,7 @@ def search_job_title2(message):
                     f'Направление: {job.scope_of_work}',
                     f'Тимлид: {job.team_leader_name}',
                     f'Участники: {job.accomplices}',
-                    f'Закончено ли: {job.is_finished}',
+                    f'Закончено ли: {"да" if job.is_finished else "нет"}',
                     f'Выложили работу: {"".join(str(job.created_date).split(".")[:-1])}']
             bot.send_message(message.chat.id, '\n'.join(send))
 
@@ -63,7 +65,7 @@ def search_job_scopework2(message):
                     f'Направление: {job.scope_of_work}',
                     f'Тимлид: {job.team_leader_name}',
                     f'Участники: {job.accomplices}',
-                    f'Закончено ли: {job.is_finished}',
+                    f'Закончено ли: {"да" if job.is_finished else "нет"}',
                     f'Выложили работу: {"".join(str(job.created_date).split(".")[:-1])}']
             bot.send_message(message.chat.id, '\n'.join(send))
 
