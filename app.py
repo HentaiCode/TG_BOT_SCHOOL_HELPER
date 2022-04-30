@@ -2,7 +2,7 @@ from flask import Flask
 from flask_login import LoginManager
 
 from database.manage import init_db
-from blueprints import auth, pages, jobs
+from blueprints import auth, pages, jobs, schedule
 from database.repositories import users_rep
 import os
 
@@ -16,6 +16,7 @@ app.config['SECRET_KEY'] = SECRET_KEY
 app.register_blueprint(auth)
 app.register_blueprint(pages)
 app.register_blueprint(jobs)
+app.register_blueprint(schedule)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
