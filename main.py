@@ -115,7 +115,7 @@ def search_job(title=None, name_of_scope=None):
     return 'Извини, но того, что ты искал нет в базе данных, попробуй ее раз или поищи по-другому))'
 
 
-def return_lessons(week_number, grade, day_of_the_week):
+def return_lessons(grade, week_number, day_of_the_week):
     schedules = db_session.query(Schedule).all()
     day_of_the_week = day_of_the_week.lower().strip()
     for schedule in schedules:
